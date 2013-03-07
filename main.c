@@ -1,6 +1,6 @@
-#define F_CPU 16000000
-#include <avr/io.h>
+// was 8 MHZ is now 16 MHZ – Scope check
 
+#include <avr/io.h>
 #include <util/delay.h>
 
 #define CTL_PIN (1<<5)
@@ -8,6 +8,7 @@
 
 void main()
 {
+
   CLKPR = 0x80;
   CLKPR = 0x0;
   ADCSRB &= ~(1<< ACME);
