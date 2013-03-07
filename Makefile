@@ -43,7 +43,7 @@ AVRDUDE = avrdude $(PROGRAMMER) -p $(DEVICE) -B 10 -F
 COMPILE = avr-gcc -Wall -Os -DF_CPU=$(CLOCK) -mmcu=$(DEVICE) -I. -ffunction-sections --std=c99
 
 # symbolic targets:
-all:	chord.hex
+all:	reverse.hex
 
 .c.o:
 	$(COMPILE) -c $< -o $@
@@ -60,7 +60,7 @@ all:	chord.hex
 	$(COMPILE) -S $< -o $@
 
 flash:	all
-	$(AVRDUDE) -U flash:w:chord.hex:i
+	$(AVRDUDE) -U flash:w:reverse.hex:i
 
 fuse:
 	$(AVRDUDE) $(FUSES)
@@ -70,18 +70,18 @@ install: flash fuse
 
 # if you use a bootloader, change the command below appropriately:
 load: all
-	bootloadHID chord.hex
+	bootloadHID reverse.hex
 
 clean:
-	rm -f chord.hex main.elf $(OBJECTS) $(OBJECTS:.o=.d)
+	rm -f reverse.hex main.elf $(OBJECTS) $(OBJECTS:.o=.d)
 
 # file targets:
 main.elf: $(OBJECTS)
 	$(COMPILE) -o main.elf $(OBJECTS) -lm -Wl,--gc-sections
 
-chord.hex: main.elf
-	rm -f chord.hex
-	avr-objcopy -j .text -j .data -O ihex main.elf chord.hex
+reverse.hex: main.elf
+	rm -f reverse.hex
+	avr-objcopy -j .text -j .data -O ihex main.elf reverse.hex
 	avr-size -C --mcu=$(DEVICE) main.elf
 # If you have an EEPROM section, you must also create a hex file for the
 # EEPROM and add it to the "flash" target.

@@ -6,8 +6,19 @@
 #define CTL_PIN (1<<5)
 #define CTL_HI (!(ACSR & (1<<ACO)))
 
+#define BLINK_DELAY_MS 100
+
+
 void main()
 {
+
+  // Flash LED once for debug
+  DDRB |= _BV(DDB5);
+  PORTB |= _BV(PORTB5);
+  _delay_ms(BLINK_DELAY_MS);
+
+  PORTB &= ~_BV(PORTB5);
+
 
   CLKPR = 0x80;
   CLKPR = 0x0;
@@ -25,15 +36,15 @@ void main()
     PORTC |= CTL_PIN;
     _delay_ms(4.2);
     
-    // 280khz burst
+    // 280khz burst (scoped at 277khz)
     TCCR0A = 0x23;
     TCNT0 = 0x0;
-    OCR0A = 27;
+    OCR0A = 56;
     DDRD |= 1<<5;
     _delay_ms(1.5);
     
-    // 245khz burst
-    OCR0A = 33;
+    // 245khz burst (scope at 247khz)
+    OCR0A = 63;
     TCNT0 = 0x0;
     _delay_ms(4.6);
     
